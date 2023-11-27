@@ -103,14 +103,14 @@ class RequestHandler:
         self.client_address = ""
         self.connection = None
         self.request_json = None
-        self.json_data = None
 
     def request(self):
         pass
 
     def response(self):
         # json形式のdデータを受け取る
-        self.json_data = json.load(self.connection.recv(16))
+        data = json.load(self.connection.recv(16))
+        return data
 
 
     def accept(self):
@@ -125,8 +125,37 @@ class RequestHandler:
     def set_connection(self, connection):
         self.connection = connection
 
-class ExecuteFunction:
-    pass
+# クラス内で関数を実行して結果をjson形式でRequestHandlerのrequestに渡す
+class ImplementFunction:
+    def __init__(self):
+        self.results = ""
+        self.id = ""
+        self.results_type = None
+        self.method = ""
+
+
+    def execute(self):
+        functionCollection = FunctionCollection()
+        if self.method == "floot":
+            tmp_result = functionCollection.floor(int(self.method))
+            self.results_type = type(tmp_result)
+            self.results = str(tmp_result)
+        elif self.method == "nroot":
+            pass
+
+    def catch_data(self, data):
+        self.id = data["id"]
+        self.method = data["method"]
+
+
+
+
+
+
+
+
+
+
 
 
 
