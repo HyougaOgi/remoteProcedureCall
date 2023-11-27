@@ -103,13 +103,14 @@ class RequestHandler:
         self.client_address = ""
         self.connection = None
         self.request_json = None
+        self.json_data = None
 
     def request(self):
         pass
 
     def response(self):
         # json形式のdデータを受け取る
-        data = json.load(self.connection.recv(16))
+        self.json_data = json.load(self.connection.recv(16))
 
 
     def accept(self):
