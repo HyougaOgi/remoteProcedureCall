@@ -1,4 +1,4 @@
-import socket, os, json, math
+import socket, os, json, math, time
 import random
 
 # クライアントからjson形式のデータ(id, 関数名, 引数, データ型など)を受け取り
@@ -23,7 +23,9 @@ def main():
     socketManager.create_socket()
     socketManager.bind_socket()
     socketManager.listen_for_connections()
+    time.sleep(1)
     print("Running server")
+    time.sleep(1)
     RequestHandler(socketManager.sock)
 
 
@@ -132,20 +134,39 @@ class ImplementFunction:
         self.id = ""
         self.results_type = None
         self.method = ""
+        self.params = None
 
 
     def execute(self):
         functionCollection = FunctionCollection()
         if self.method == "floot":
-            tmp_result = functionCollection.floor(int(self.method))
+            tmp_result = functionCollection.floor(int(self.params))
             self.results_type = type(tmp_result)
             self.results = str(tmp_result)
         elif self.method == "nroot":
+            tmp_result = functionCollection.nroot(self.params[0], self.params[1])
+            self.results_type = type(tmp_result)
+            self.results = str(tmp_result)
+        elif self.method == "reverse":
+            tmp_result = functionCollection.reverse(self.params)
+            self.results_type = type(tmp_result)
+            self.results = str(tmp_result)
+        elif self.method == "valid_anagram":
+            self.results = functionCollection.valid_anagram(self.params[0], self.params[1])
+            self.results_type = type(self.results)
+        elif self.method == "sort":
+            self.results = functionCollection.sort(self.params)
+            self.results_type = type(self.results)
+        else:
+            # 実行しないでそのまま返すかもう一度どクライアントからデータを受け取る
             pass
+
 
     def catch_data(self, data):
         self.id = data["id"]
         self.method = data["method"]
+        self.params = data["paramas"]
+
 
 
 
