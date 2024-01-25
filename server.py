@@ -26,7 +26,37 @@ def main():
     time.sleep(1)
     print("Running server")
     time.sleep(1)
-    RequestHandler(socketManager.sock)
+    requestHandler = RequestHandler(socketManager.sock)
+    print("request_handler is ok")
+    while True:
+        requestHandler.accept()
+        try:
+            print("address {}".format(requestHandler.client_address))
+            while True:
+                print("test running")
+                json_data = requestHandler.response()
+                if json_data:
+                    implement_function = ImplementFunction()
+                    implement_function.catch_data(json_data)
+                    data = implement_function.set_result_to_return(implement_function.results, implement_function.results_type, implement_function.id)
+
+
+
+
+
+
+
+
+                else:
+                    print("no data")
+                    time.sleep(1)
+                    print("Closing current connection")
+                    break
+        finally:
+            requestHandler.connection.close()
+
+
+
 
 
 class FunctionCollection:
@@ -110,7 +140,7 @@ class RequestHandler:
         pass
 
     def response(self):
-        # json形式のdデータを受け取る
+        # json形式のデータを受け取る
         data = json.load(self.connection.recv(16))
         return data
 
@@ -166,6 +196,12 @@ class ImplementFunction:
         self.id = data["id"]
         self.method = data["method"]
         self.params = data["paramas"]
+
+    def set_result_to_return(self, result, result_type, id) -> dict:
+        return {"result":result, "result_type":result_type, "id":id}
+
+
+
 
 
 
