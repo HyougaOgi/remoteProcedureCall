@@ -39,14 +39,7 @@ def main():
                     implement_function = ImplementFunction()
                     implement_function.catch_data(json_data)
                     data = implement_function.set_result_to_return(implement_function.results, implement_function.results_type, implement_function.id)
-
-
-
-
-
-
-
-
+                    requestHandler.request(data)
                 else:
                     print("no data")
                     time.sleep(1)
@@ -136,13 +129,14 @@ class RequestHandler:
         self.connection = None
         self.request_json = None
 
-    def request(self):
-        pass
+    def request(self, data):
+        print(data)
+        self.connection.sendall(data.encode())
 
     def response(self):
         # json形式のデータを受け取る
         data = json.load(self.connection.recv(16))
-        return data
+        return data.decode("utf-8")
 
 
     def accept(self):
@@ -199,22 +193,6 @@ class ImplementFunction:
 
     def set_result_to_return(self, result, result_type, id) -> dict:
         return {"result":result, "result_type":result_type, "id":id}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
